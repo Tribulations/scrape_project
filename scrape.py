@@ -26,30 +26,31 @@ fh.setFormatter(formatter)# This will set the format to the FileHandler
 logger.addHandler(fh)
 
 try:
-	file = open("/home/jocke/scrapeProject/log.txt", 'a')
+	file = open("/home/pi/sharedFolder/Scraping/log.txt", 'a')
 
 	url = "http://www.nasdaqomxnordic.com/shares"
 	driver = webdriver.Chrome("/usr/bin/chromedriver") # loads the driver? Maybe the path isn't needed?
 	driver2 = webdriver.Chrome()
 
 	driver.get(url) # retrieves the webpage?
-
+	time.sleep(10)
+	cookieBox = driver.find_element_by_link_text("Ok, got it").click()
 	xpathSTO = "//*[@id=\"marketCheckboxes\"]/li[3]/label" # the path to the clickbox
 	STOClickBox = driver.find_element_by_xpath(xpathSTO) # saves the element i var.
 	STOClickBox.click() # clicks the element
 	#xpathHEL = "//*[@id=\"marketCheckboxes\"]/li[4]/label"
-	#xpathSmallCap = "//*[@id=\"nordicSegment\"]/ul/li[3]/label"
-	#xpathMidCap = "//*[@id=\"nordicSegment\"]/ul/li[2]/label"
-	#MidCapClickBox = driver.find_element_by_xpath(xpathMidCap)
+	xpathSmallCap = "//*[@id=\"nordicSegment\"]/ul/li[3]/label"
+	xpathMidCap = "//*[@id=\"nordicSegment\"]/ul/li[2]/label"
+	MidCapClickBox = driver.find_element_by_xpath(xpathMidCap)
 	#HELClickBox = driver.find_element_by_xpath(xpathHEL)
 
 
-	#SmallCapClickBox = driver.find_element_by_xpath(xpathSmallCap)
+	SmallCapClickBox = driver.find_element_by_xpath(xpathSmallCap)
 
-
-	#MidCapClickBox.click()
-
-	#SmallCapClickBox.click()
+	time.sleep(2)
+	MidCapClickBox.click()
+	time.sleep(2)
+	SmallCapClickBox.click()
 
 	time.sleep(6.75)
 
@@ -61,7 +62,7 @@ try:
 	print("AmountOfStock = " + str(amountOfStock))
 	file.write("AmountOfStock = " + str(amountOfStock) + '\n')
 	file.write("Script started ")
-	file.write(datetime.now().strftime("%H:%M:%S") + '\n' )
+	file.write(datetime.now().strftime("%y-%m-%d %H:%M:%S") + '\n' )
 	#print("Script started: " + datetime.now().strftime("%H:%M:%S") + '\n')
 	amountOfLinks = 0
 
@@ -126,9 +127,10 @@ try:
 
 	print(str(amountOfLinks))
 	#file.write("AmountOfLinks = " + str(amountOfLinks))
-	file.write("Script ended: " + datetime.now().strftime("%H:%M:%S"))
+	file.write("Script ended: " + datetime.now().strftime("%y-%m-%d %H:%M:%S"))
 	driver.quit()
 	driver2.quit()
 	file.close()
 except Exception as e:
 	logger.exception(e)
+	print("Exception occurred!")
